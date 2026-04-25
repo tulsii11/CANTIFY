@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>CANTIFY — No More Wait, Just Order Straight</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+  </head>
+  <body>
+    <!-- Custom cursor -->
+    <div id="cur-dot"></div>
+    <div id="cur-ring"></div>
+    <div id="toast-container"></div>
+
+    <!-- ══ NAVBAR ══════════════════════════════════ -->
+    <nav id="navbar" style="display: none">
+      <div class="nav-inner">
+        <div class="nav-brand" onclick="showPage('home')">
+          <div class="nav-brand-icon">🍽️</div>
+          <span class="nav-brand-word">CANTIFY</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a data-page="home" onclick="showPage('home')" class="active"
+              >Home</a
+            >
+          </li>
+          <li><a data-page="menu" onclick="showPage('menu')">Menu</a></li>
+          <li>
+            <a data-page="orders" onclick="showPage('orders')">My Orders</a>
+          </li>
+          <li><a data-page="about" onclick="showPage('about')">About</a></li>
+          <li>
+            <a data-page="contact" onclick="showPage('contact')">Contact</a>
+          </li>
+        </ul>
+        <div class="nav-end">
+          <button class="nav-cart" onclick="showPage('cart')">
+            🛒&nbsp;Cart&nbsp;<span class="cart-badge">0</span>
+          </button>
+          <div class="nav-chip">
+            <div class="nav-avatar" id="nav-avatar">U</div>
+            <span id="nav-name">User</span>
+          </div>
+          <button class="nav-logout" onclick="logout()">Logout</button>
+        </div>
+        <div class="hamburger" id="hamburger" onclick="toggleMob()">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile nav -->
+    <div id="mob-nav" class="mob-nav">
+      <a
+        onclick="
+          showPage('home');
+          closeMob();
+        "
+        >🏠 Home</a
+      >
+      <a
+        onclick="
+          showPage('menu');
+          closeMob();
+        "
+        >🍽️ Menu</a
+      >
+      <a
+        onclick="
+          showPage('orders');
+          closeMob();
+        "
+        >📋 My Orders</a
+      >
+      <a
+        onclick="
+          showPage('cart');
+          closeMob();
+        "
+        >🛒 Cart</a
+      >
+      <a
+        onclick="
+          showPage('about');
+          closeMob();
+        "
+        >👥 About</a
+      >
+      <a
+        onclick="
+          showPage('contact');
+          closeMob();
+        "
+        >📞 Contact</a
+      >
+      <a
+        onclick="
+          logout();
+          closeMob();
+        "
+        style="color: var(--rose)"
+        >↩ Logout</a
+      >
+    </div>
+
+    <!-- ══ SNACKBAR CART ════════════════════════════ -->
+    <div id="snack-cart" onclick="showPage('cart')">
+      <div class="snack-inner">
+        <div class="snack-left">
+          <div class="snack-count" id="snack-count">0 items</div>
+          <div class="snack-total" id="snack-total">₹0.00</div>
+        </div>
+        <div class="snack-cta">
+          View Cart <span class="snack-arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FEEDBACK MODAL ══════════════════════════ -->
+    <div class="modal-bg" id="fb-modal">
+      <div class="modal-box" id="fb-modal-box">
+        <div class="modal-top">
+          <h3 class="modal-ttl">Rate Your Meal ✨</h3>
+          <button class="modal-close" onclick="closeFeedbackModal()">✕</button>
+        </div>
+        <p style="color: var(--fog); font-size: 0.845rem; margin-bottom: 2px">
+          Your honest feedback makes every meal better.
+        </p>
+        <div class="stars">
+          <button class="star" data-r="1">⭐</button>
+          <button class="star" data-r="2">⭐</button>
+          <button class="star" data-r="3">⭐</button>
+          <button class="star" data-r="4">⭐</button>
+          <button class="star" data-r="5">⭐</button>
+        </div>
+        <div class="fg">
+          <label class="fl">Your Review (optional)</label>
+          <textarea
+            id="fb-review"
+            class="fi"
+            placeholder="What did you love? Any suggestions?"
+            rows="3"
+          ></textarea>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 4px">
+          <button class="btn btn-fire btn-full" id="fb-submit">
+            Submit Rating
+          </button>
+          <button class="btn btn-ghost" onclick="closeFeedbackModal()">
+            Skip
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: AUTH
+══════════════════════════════════════════════ -->
+    <div id="page-auth" class="page active">
+      <div class="auth-scene">
+        <!-- Large background word -->
+        <div class="auth-bg-text">
+          <div class="auth-bg-word">CANTIFY&nbsp;FOOD</div>
+        </div>
+        <!-- Diagonal heat stripes -->
+        <div class="auth-stripes"></div>
+
+        <!-- Rising food emojis -->
+        <div class="food-float">
+          <span class="ff">🍕</span><span class="ff">🍔</span
+          ><span class="ff">🧇</span> <span class="ff">🌮</span
+          ><span class="ff">🍜</span><span class="ff">🥗</span>
+          <span class="ff">🍱</span><span class="ff">🌯</span
+          ><span class="ff">☕</span> <span class="ff">🧃</span
+          ><span class="ff">🍟</span><span class="ff">🥪</span>
+          <span class="ff">🍛</span><span class="ff">🥤</span>
+        </div>
+
+        <div class="auth-wrap">
+          <!-- ★ LOGO BADGE — partially outside card ★ -->
+          <div class="auth-logo-float">
+            <div class="auth-logo-gem">🍽️</div>
+            <div class="auth-logo-text-group">
+              <span class="auth-logo-name">CANTIFY</span>
+              <span class="auth-logo-sub">Smart Canteen · CHARUSAT</span>
+            </div>
+          </div>
+
+          <div class="auth-card">
+            <div class="auth-head">
+              <h2>Welcome Back 👋</h2>
+              <p>Pre-order food. Skip the queue. Own your break.</p>
+            </div>
+
+            <div class="auth-tabs">
+              <div class="auth-tab active" onclick="switchTab('login')">
+                Login
+              </div>
+              <div class="auth-tab" onclick="switchTab('register')">
+                Sign Up
+              </div>
+            </div>
+
+            <!-- LOGIN -->
+            <form
+              class="auth-form active"
+              id="form-login"
+              onsubmit="handleLogin(event)"
+            >
+              <div class="fg">
+                <label class="fl">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  class="fi"
+                  placeholder="you@charusat.edu.in"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+              <div class="fg">
+                <label class="fl">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  class="fi"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              <p class="ferr" id="login-err"></p>
+              <button
+                type="submit"
+                class="btn btn-fire btn-full"
+                style="margin-top: 6px"
+              >
+                🚀 Sign In to CANTIFY
+              </button>
+              <div class="auth-note" style="margin-top: 18px">
+                <strong>Demo Admin:</strong> admin@gmail.com / password<br />
+                <strong>Students:</strong> register with @charusat.edu.in
+              </div>
+            </form>
+
+            <!-- REGISTER -->
+            <form
+              class="auth-form"
+              id="form-register"
+              onsubmit="handleRegister(event)"
+            >
+              <div class="fg">
+                <label class="fl">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  class="fi"
+                  placeholder="Your Name"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+              <div class="fg">
+                <label class="fl">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  class="fi"
+                  placeholder="you@charusat.edu.in"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+              <div class="fg">
+                <label class="fl">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  class="fi"
+                  placeholder="Min 6 characters"
+                  required
+                  minlength="6"
+                />
+              </div>
+              <p class="ferr" id="reg-err"></p>
+              <button
+                type="submit"
+                class="btn btn-fire btn-full"
+                style="margin-top: 6px"
+              >
+                ✨ Create My Account
+              </button>
+              <div class="auth-note" style="margin-top: 18px">
+                🎓 @charusat.edu.in email → Student access<br />
+                📧 Any other email → Admin access
+              </div>
+            </form>
+          </div>
+          <!-- /auth-card -->
+        </div>
+        <!-- /auth-wrap -->
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════════════ -->
+    <div id="page-home" class="page">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-stripes"></div>
+        <div class="hero-floats">
+          <span class="hf">🍕</span><span class="hf">🌮</span
+          ><span class="hf">🍔</span> <span class="hf">🧇</span
+          ><span class="hf">🥗</span><span class="hf">🍜</span>
+          <span class="hf">🍱</span>
+        </div>
+
+        <div class="hero-inner">
+          <!-- Live canteen status -->
+          <div style="margin-bottom: 18px">
+            <span class="live-status open canteen-pill">
+              <span
+                style="
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 50%;
+                  background: currentColor;
+                  animation: pulsedot 2s infinite;
+                  display: inline-block;
+                  flex-shrink: 0;
+                "
+              ></span>
+              Canteen Open Now
+            </span>
+          </div>
+
+          <div class="hero-pill">
+            <span class="blink"></span>
+            Smart Canteen · CHARUSAT University
+          </div>
+
+          <!-- Main title -->
+          <h1 class="hero-title">
+            <span class="ht-white">CAN</span><span class="ht-flame">TIFY</span
+            ><br />
+            <span
+              style="
+                font-size: 0.48em;
+                letter-spacing: -1px;
+                color: var(--fog);
+                font-weight: 700;
+              "
+              >Your campus, your food, your time.</span
+            >
+          </h1>
+
+          <!-- ★ TAGLINE — spotlighted ★ -->
+          <div
+            style="
+              margin-bottom: 34px;
+              animation: fade-up 0.7s var(--ease) 0.5s both;
+            "
+          >
+            <div class="hero-tagline-box">
+              <span class="hero-tagline"
+                >"No more wait, just order straight."</span
+              >
+            </div>
+          </div>
+
+          <p class="hero-sub">
+            Pre-order during class. Walk straight to the counter at lunch. Hot
+            food ready, zero queue. That's the CANTIFY promise to every CHARUSAT
+            student.
+          </p>
+
+          <div class="hero-cta-row">
+            <button class="btn btn-fire btn-lg" onclick="showPage('menu')">
+              🍕 Order Now
+            </button>
+            <button class="btn btn-outline btn-lg" onclick="showPage('orders')">
+              📋 Track My Order
+            </button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hs">
+              <span class="hs-num">50+</span
+              ><span class="hs-lbl">Menu Items</span>
+            </div>
+            <div class="hs">
+              <span class="hs-num">~10m</span
+              ><span class="hs-lbl">Avg Ready Time</span>
+            </div>
+            <div class="hs">
+              <span class="hs-num">0</span
+              ><span class="hs-lbl">Queue Wait</span>
+            </div>
+            <div class="hs">
+              <span class="hs-num">100%</span
+              ><span class="hs-lbl">Fresh Made</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-cue">
+          <div class="scroll-barrel"><div class="scroll-bead"></div></div>
+          Scroll
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="section section-alt">
+        <div class="container">
+          <div style="text-align: center; margin-bottom: 50px" class="rv">
+            <div class="s-eye">Why CANTIFY</div>
+            <h2 class="s-title">
+              Built for <span class="hi">your</span> lunch break
+            </h2>
+            <p class="s-sub" style="margin: 10px auto 0">
+              Every feature is there to save you time and make ordering
+              effortless.
+            </p>
+          </div>
+          <div class="feat-grid">
+            <div class="feat-card rv">
+              <div class="feat-ico">⚡</div>
+              <h3>Pre-Order During Class</h3>
+              <p>
+                Browse the menu from your seat and place an order. The canteen
+                starts cooking immediately — ready for your break.
+              </p>
+            </div>
+            <div class="feat-card rv">
+              <div class="feat-ico">📱</div>
+              <h3>Live Order Tracking</h3>
+              <p>
+                Know exactly when your food will be ready. Pending → Preparing →
+                Ready → Done. No more standing and wondering.
+              </p>
+            </div>
+            <div class="feat-card rv">
+              <div class="feat-ico">🧾</div>
+              <h3>Instant Digital Bill</h3>
+              <p>
+                Every order auto-generates a printable invoice. Perfect for
+                tracking, reimbursements or just good record-keeping.
+              </p>
+            </div>
+            <div class="feat-card rv">
+              <div class="feat-ico">🎓</div>
+              <h3>Campus-Secured Access</h3>
+              <p>
+                CHARUSAT email authentication keeps the platform exclusive to
+                campus. Students order, admins manage — clean separation.
+              </p>
+            </div>
+            <div class="feat-card rv">
+              <div class="feat-ico">⭐</div>
+              <h3>Rate Every Meal</h3>
+              <p>
+                After each order, rate your experience in seconds. Your feedback
+                directly shapes the menu and service quality.
+              </p>
+            </div>
+            <div class="feat-card rv">
+              <div class="feat-ico">🍽️</div>
+              <h3>Wide Menu Variety</h3>
+              <p>
+                Snacks, waffles, drinks, pizza and more — fresh categories
+                managed by canteen staff in real time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section class="section">
+        <div class="container">
+          <div style="text-align: center; margin-bottom: 50px" class="rv">
+            <div class="s-eye">3 Steps</div>
+            <h2 class="s-title">
+              From craving to <span class="hi">eating</span>
+            </h2>
+          </div>
+          <div class="steps-wrap">
+            <div class="step rv">
+              <div class="step-n">01</div>
+              <span class="step-ico">📲</span>
+              <h3>Browse & Add</h3>
+              <p>
+                Open CANTIFY any time, pick your favourites and add them to cart
+                in seconds.
+              </p>
+            </div>
+            <div class="step-arr">→</div>
+            <div class="step rv">
+              <div class="step-n">02</div>
+              <span class="step-ico">👨‍🍳</span>
+              <h3>We Start Cooking</h3>
+              <p>
+                The canteen gets your order instantly and starts preparing
+                fresh, hot food for you.
+              </p>
+            </div>
+            <div class="step-arr">→</div>
+            <div class="step rv">
+              <div class="step-n">03</div>
+              <span class="step-ico">✅</span>
+              <h3>Pick Up & Enjoy</h3>
+              <p>
+                Walk straight to the counter at break time, collect your meal
+                and enjoy every minute.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA BANNER -->
+      <section class="section section-alt">
+        <div class="container">
+          <div class="cta-band rv">
+            <div style="font-size: 2.6rem; margin-bottom: 14px">🍽️</div>
+            <h2>
+              Ready to order <span style="color: var(--ember)">smarter</span>?
+            </h2>
+            <p>
+              Join the CHARUSAT students already saving 20 minutes every single
+              lunch break.
+            </p>
+            <button class="btn btn-fire btn-lg" onclick="showPage('menu')">
+              🚀 Explore the Menu
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: MENU
+══════════════════════════════════════════════ -->
+    <div id="page-menu" class="page">
+      <div class="pg-hero">
+        <h1>Explore <span style="color: var(--ember)">Menu</span></h1>
+        <p>Fresh, made-to-order dishes — updated daily</p>
+        <div style="margin-top: 14px">
+          <span class="live-status open canteen-pill">
+            <span
+              style="
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: currentColor;
+                animation: pulsedot 2s infinite;
+                display: inline-block;
+              "
+            ></span>
+            Canteen Open
+          </span>
+        </div>
+      </div>
+      <div class="container" style="padding-bottom: 120px">
+        <div class="search-row">
+          <span>🔍</span>
+          <input
+            type="text"
+            id="menu-search"
+            placeholder="Search anything — pizza, chai, waffles…"
+            oninput="searchMenu(this.value)"
+          />
+        </div>
+        <div class="cat-bar" id="cat-bar">
+          <span style="color: var(--fog); font-size: 0.84rem; padding: 8px 0"
+            >Loading categories…</span
+          >
+        </div>
+        <div class="menu-grid" id="menu-grid">
+          <div class="loading-box" style="grid-column: 1/-1">
+            <div class="spin"></div>
+            <span>Loading menu…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: CART
+══════════════════════════════════════════════ -->
+    <div id="page-cart" class="page">
+      <div class="pg-hero">
+        <h1>Your <span style="color: var(--ember)">Cart</span></h1>
+        <p>Review your selection before placing the order</p>
+      </div>
+      <div class="container" style="padding-bottom: 120px">
+        <div class="cart-layout">
+          <div id="cart-list"></div>
+          <div id="cart-summary"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: MY ORDERS
+══════════════════════════════════════════════ -->
+    <div id="page-orders" class="page">
+      <div class="pg-hero">
+        <h1>My <span style="color: var(--ember)">Orders</span></h1>
+        <p>Track live orders and browse your history</p>
+      </div>
+      <div class="container" style="padding-bottom: 100px">
+        <div
+          style="display: flex; justify-content: flex-end; margin-bottom: 22px"
+        >
+          <button class="btn btn-outline btn-sm" onclick="loadOrders()">
+            🔄 Refresh
+          </button>
+        </div>
+        <div id="orders-wrap">
+          <div class="loading-box"><div class="spin"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: ABOUT
+══════════════════════════════════════════════ -->
+    <div id="page-about" class="page">
+      <div class="pg-hero">
+        <h1>About <span style="color: var(--ember)">CANTIFY</span></h1>
+        <p>The story, the team, the mission</p>
+      </div>
+      <div class="container" style="padding-bottom: 80px">
+        <!-- Mission -->
+        <div
+          class="feat-card rv"
+          style="
+            padding: 44px;
+            text-align: center;
+            margin-bottom: 52px;
+            border-radius: var(--r3);
+          "
+        >
+          <div style="font-size: 2.8rem; margin-bottom: 18px">🎯</div>
+          <h2
+            style="
+              font-family: var(--font-h);
+              font-size: 2rem;
+              font-weight: 800;
+              letter-spacing: -1.5px;
+              margin-bottom: 14px;
+            "
+          >
+            Our <span style="color: var(--ember)">Mission</span>
+          </h2>
+          <p
+            style="
+              color: var(--fog);
+              max-width: 680px;
+              margin: 0 auto;
+              font-size: 1.02rem;
+              line-height: 1.85;
+            "
+          >
+            CANTIFY was born from a simple frustration: CHARUSAT students lose
+            15–20 minutes of every lunch break standing in canteen queues. We
+            built this platform to give that time back — so students can
+            pre-order, walk straight to the counter and use their
+            break for rest, socialising or that last-minute revision.
+          </p>
+        </div>
+
+        <!-- Team -->
+        <div style="text-align: center; margin-bottom: 38px" class="rv">
+          <div class="s-eye">The Builders</div>
+          <h2 class="s-title">Meet the <span class="hi">Team</span></h2>
+        </div>
+        <div class="team-grid" style="margin-bottom: 52px">
+          <div class="team-card rv">
+            <div class="team-img-w">
+              <img
+                src="assets/images/Tulsi.jpeg"
+                alt="Tulsi"
+                class="team-img"
+                onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&crop=faces'"
+              />
+              <div class="team-ov">
+                <a href="https://www.linkedin.com/in/tulsi-dhameliya-12672b317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="team-li"
+                  >in LinkedIn</a
+                >
+              </div>
+            </div>
+            <div class="team-body">
+              <div class="team-name">Tulsi Dhameliya</div>
+              <div class="team-role">Project Lead</div>
+              <div class="team-bio">
+                Project Lead who turned canteen queue frustration into a
+                campus-wide platform.
+              </div>
+            </div>
+          </div>
+          <div class="team-card rv">
+            <div class="team-img-w">
+              <img
+                src="assets/images/yatri.jpeg"
+                alt="Yatri"
+                class="team-img"
+                onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=280&fit=crop&crop=faces'"
+              />
+              <div class="team-ov">
+                <a href="https://www.linkedin.com/in/yatri-pavasiya-584731317?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="team-li"
+                  >in LinkedIn</a
+                >
+              </div>
+            </div>
+            <div class="team-body">
+              <div class="team-name">Yatri Pavasiya</div>
+              <div class="team-role">Database Administrator</div>
+              <div class="team-bio">
+                Database Administrator who manages the database and ensures it is running smoothly.
+              </div>
+            </div>
+          </div>
+          <div class="team-card rv">
+            <div class="team-img-w">
+              <img
+                src="assets/images/priyal.jpeg"
+                alt="Priyal"
+                class="team-img"
+                onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=280&fit=crop&crop=faces'"
+              />
+              <div class="team-ov">
+                <a href="https://www.linkedin.com/in/priyal-rathod-b75605313?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" class="team-li"
+                  >in LinkedIn</a
+                >
+              </div>
+            </div>
+            <div class="team-body">
+              <div class="team-name">Priyal Rathod</div>
+              <div class="team-role">Backend Developer</div>
+              <div class="team-bio">  
+                Backend Developer who builds the PHP/MySQL backbone that keeps orders flowing and bills
+                printing instantly.
+              </div>
+            </div>
+          </div>
+          <div class="team-card rv">
+            <div class="team-img-w">
+              <img
+                src="assets/images/hardi.jpeg"
+                alt="Hardi"
+                class="team-img"
+                onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=280&fit=crop&crop=faces'"
+              />
+              <div class="team-ov">
+                <a href="https://linkedin.com" target="_blank" class="team-li"
+                  >in LinkedIn</a
+                >
+              </div>
+            </div>
+            <div class="team-body">
+              <div class="team-name">Hardi Patel </div>
+              <div class="team-role">Frontend Developer </div>
+              <div class="team-bio">
+                Frontend Developer who builds the frontend of the website and ensures it is user-friendly and responsive.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px"
+          class="rv"
+        >
+          <div class="feat-card">
+            <div class="feat-ico">🌱</div>
+            <h3>Our Vision</h3>
+            <p>
+              Become the standard smart ordering system across all CHARUSAT
+              campuses — reducing waste, improving efficiency and making every
+              student's day a little better.
+            </p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-ico">⚙️</div>
+            <h3>Tech Stack</h3>
+            <p>
+              HTML, CSS, JavaScript, PHP &amp; MySQL — a battle-tested stack
+              that runs reliably on XAMPP for local dev and scales cleanly to
+              production.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════════════════════ -->
+    <div id="page-contact" class="page">
+      <div class="pg-hero">
+        <h1>Get in <span style="color: var(--ember)">Touch</span></h1>
+        <p>Questions, feedback or suggestions — we're all ears.</p>
+      </div>
+      <div class="container" style="padding-bottom: 80px">
+        <div class="contact-grid">
+          <div class="contact-panel rv">
+            <h3>Contact <span style="color: var(--ember)">Info</span></h3>
+            <p>
+              We usually respond within a few hours during canteen operating
+              hours.
+            </p>
+            <div class="ci-line">
+              <div class="ci-icon">📍</div>
+              <div class="ci-text">
+                <strong>Address</strong
+                ><span>CHARUSAT University, Anand, Gujarat – 388421</span>
+              </div>
+            </div>
+            <div class="ci-line">
+              <div class="ci-icon">📧</div>
+              <div class="ci-text">
+                <strong>Email</strong><span>cantify@charusat.ac.in</span>
+              </div>
+            </div>
+            <div class="ci-line">
+              <div class="ci-icon">📞</div>
+              <div class="ci-text">
+                <strong>Phone</strong><span>+91 92650 00000</span>
+              </div>
+            </div>
+            <div class="ci-line">
+              <div class="ci-icon">⏰</div>
+              <div class="ci-text">
+                <strong>Hours</strong><span>Mon – Sat: 8:00 AM – 8:00 PM</span>
+              </div>
+            </div>
+          </div>
+          <div class="contact-panel rv">
+            <h3>Send a <span style="color: var(--ember)">Message</span></h3>
+            <br />
+            <form onsubmit="handleContact(event)">
+              <div class="fg">
+                <label class="fl">Full Name</label
+                ><input
+                  type="text"
+                  name="name"
+                  class="fi"
+                  placeholder="Your Name"
+                  required
+                />
+              </div>
+              <div class="fg">
+                <label class="fl">Email</label
+                ><input
+                  type="email"
+                  name="email"
+                  class="fi"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <div class="fg">
+                <label class="fl">Message</label
+                ><textarea
+                  name="message"
+                  class="fi"
+                  placeholder="Write your message here…"
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-fire btn-full">
+                📨 Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+     PAGE: ADMIN
+══════════════════════════════════════════════ -->
+    <div id="page-admin" class="page">
+      <div class="admin-layout">
+        <aside class="admin-sidebar">
+          <div class="admin-brand">⚙ Admin Panel</div>
+          <div
+            class="side-btn active"
+            onclick="adminSection('dashboard', this)"
+          >
+            📊 Dashboard
+          </div>
+          <div class="side-btn" onclick="adminSection('menu', this)">
+            🍽️ Menu Items
+          </div>
+          <div class="side-btn" onclick="adminSection('orders', this)">
+            📋 All Orders
+          </div>
+          <div class="side-btn" onclick="adminSection('feedback', this)">
+            ⭐ Feedback
+          </div>
+          <div class="side-btn" onclick="adminSection('contacts', this)">
+            📩 Messages
+          </div>
+        </aside>
+
+        <div class="admin-body">
+          <!-- Dashboard -->
+          <div id="admin-section-dashboard">
+            <h2
+              style="
+                font-family: var(--font-h);
+                font-size: 1.75rem;
+                font-weight: 800;
+                letter-spacing: -1px;
+                margin-bottom: 26px;
+              "
+            >
+              Dashboard <span style="color: var(--ember)">Overview</span>
+            </h2>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="sc-lbl">Total Orders</div>
+                <div class="sc-val" id="stat-orders">—</div>
+              </div>
+              <div class="stat-card">
+                <div class="sc-lbl">Menu Items</div>
+                <div class="sc-val" id="stat-items">—</div>
+              </div>
+              <div class="stat-card">
+                <div class="sc-lbl">Today Revenue</div>
+                <div class="sc-val" id="stat-revenue">—</div>
+              </div>
+              <div class="stat-card">
+                <div class="sc-lbl">Messages</div>
+                <div class="sc-val" id="stat-msgs">—</div>
+              </div>
+            </div>
+            <div class="feat-card" style="padding: 26px">
+              <h3 style="margin-bottom: 6px; font-family: var(--font-h)">
+                Welcome back, Admin 👋
+              </h3>
+              <p style="color: var(--fog); font-size: 0.875rem">
+                Manage menu items, track all orders, view student feedback and
+                contact messages from this panel.
+              </p>
+            </div>
+          </div>
+
+          <!-- Menu management -->
+          <div id="admin-section-menu" style="display: none">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 26px;
+              "
+            >
+              <h2
+                style="
+                  font-family: var(--font-h);
+                  font-size: 1.75rem;
+                  font-weight: 800;
+                  letter-spacing: -1px;
+                "
+              >
+                Menu <span style="color: var(--ember)">Management</span>
+              </h2>
+              <button class="btn btn-fire btn-sm" onclick="showAddItemForm()">
+                + Add Item
+              </button>
+            </div>
+            <div
+              id="item-form-wrap"
+              class="feat-card"
+              style="padding: 26px; margin-bottom: 26px; display: none"
+            >
+              <h3
+                id="item-form-title"
+                style="margin-bottom: 22px; font-family: var(--font-h)"
+              >
+                Add New Item
+              </h3>
+              <form onsubmit="handleItemSubmit(event)" id="item-form">
+                <input type="hidden" name="id" id="item-id" />
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 14px;
+                  "
+                >
+                  <div class="fg">
+                    <label class="fl">Item Name *</label
+                    ><input
+                      type="text"
+                      name="name"
+                      id="item-name"
+                      class="fi"
+                      placeholder="e.g. Masala Chai"
+                      required
+                    />
+                  </div>
+                  <div class="fg">
+                    <label class="fl">Category *</label
+                    ><select
+                      name="category_id"
+                      id="item-category"
+                      class="fi"
+                      required
+                    >
+                      <option value="">Select category…</option>
+                    </select>
+                  </div>
+                  <div class="fg">
+                    <label class="fl">Price (₹) *</label
+                    ><input
+                      type="number"
+                      name="price"
+                      id="item-price"
+                      class="fi"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      required
+                    />
+                  </div>
+                  <div class="fg">
+                    <label class="fl">Prep Time (min)</label
+                    ><input
+                      type="number"
+                      name="prep_time"
+                      id="item-prep"
+                      class="fi"
+                      placeholder="10"
+                      min="1"
+                      value="10"
+                    />
+                  </div>
+                </div>
+                <div class="fg">
+                  <label class="fl">Description</label
+                  ><input
+                    type="text"
+                    name="description"
+                    id="item-desc"
+                    class="fi"
+                    placeholder="Short description"
+                  />
+                </div>
+                <div class="fg">
+                  <label class="fl">Image URL</label
+                  ><input
+                    type="url"
+                    name="image_url"
+                    id="item-img"
+                    class="fi"
+                    placeholder="https://…"
+                  />
+                </div>
+                <div class="fg" id="avail-group" style="display: none">
+                  <label class="fl">Available</label
+                  ><select name="is_available" id="item-avail" class="fi">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 6px">
+                  <button
+                    type="submit"
+                    class="btn btn-fire"
+                    id="item-submit-btn"
+                  >
+                    Add Item
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-ghost"
+                    onclick="hideItemForm()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="tbl-card">
+              <table class="dtbl">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Prep</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-menu-table">
+                  <tr>
+                    <td
+                      colspan="7"
+                      style="
+                        text-align: center;
+                        padding: 38px;
+                        color: var(--fog);
+                      "
+                    >
+                      Loading…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- All Orders -->
+          <div id="admin-section-orders" style="display: none">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 26px;
+              "
+            >
+              <h2
+                style="
+                  font-family: var(--font-h);
+                  font-size: 1.75rem;
+                  font-weight: 800;
+                  letter-spacing: -1px;
+                "
+              >
+                All <span style="color: var(--ember)">Orders</span>
+              </h2>
+              <button
+                class="btn btn-outline btn-sm"
+                onclick="loadAdminOrders()"
+              >
+                🔄 Refresh
+              </button>
+            </div>
+            <div class="tbl-card">
+              <table class="dtbl">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Update</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-table">
+                  <tr>
+                    <td
+                      colspan="7"
+                      style="
+                        text-align: center;
+                        padding: 38px;
+                        color: var(--fog);
+                      "
+                    >
+                      Loading…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Feedback -->
+          <div id="admin-section-feedback" style="display: none">
+            <h2
+              style="
+                font-family: var(--font-h);
+                font-size: 1.75rem;
+                font-weight: 800;
+                letter-spacing: -1px;
+                margin-bottom: 26px;
+              "
+            >
+              Customer <span style="color: var(--ember)">Feedback</span>
+            </h2>
+            <div id="admin-feedback-list">
+              <div class="loading-box"><div class="spin"></div></div>
+            </div>
+          </div>
+
+          <!-- Contacts -->
+          <div id="admin-section-contacts" style="display: none">
+            <h2
+              style="
+                font-family: var(--font-h);
+                font-size: 1.75rem;
+                font-weight: 800;
+                letter-spacing: -1px;
+                margin-bottom: 26px;
+              "
+            >
+              Contact <span style="color: var(--ember)">Messages</span>
+            </h2>
+            <div class="tbl-card">
+              <table class="dtbl">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-contacts-table">
+                  <tr>
+                    <td
+                      colspan="4"
+                      style="
+                        text-align: center;
+                        padding: 38px;
+                        color: var(--fog);
+                      "
+                    >
+                      Loading…
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FOOTER ═════════════════════════════════ -->
+    <footer id="site-footer" style="display: none">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="fb-name">
+              CAN<span style="color: var(--ember)">TIFY</span>
+            </div>
+            <div class="fb-tag">"No more wait, just order straight."</div>
+            <p class="fb-desc">
+              Smart canteen management for CHARUSAT University. Pre-order, skip
+              the queue and make every break count.
+            </p>
+          </div>
+          <div class="fc-col">
+            <h4>Navigate</h4>
+            <ul>
+              <li><a onclick="showPage('home')">Home</a></li>
+              <li><a onclick="showPage('menu')">Menu</a></li>
+              <li><a onclick="showPage('orders')">My Orders</a></li>
+              <li><a onclick="showPage('cart')">Cart</a></li>
+            </ul>
+          </div>
+          <div class="fc-col">
+            <h4>Info</h4>
+            <ul>
+              <li><a onclick="showPage('about')">About Us</a></li>
+              <li><a onclick="showPage('contact')">Contact</a></li>
+              <li><a>Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bot">
+          <span>© 2025 CANTIFY · Built with ❤️ at CHARUSAT University</span>
+          <span
+            style="
+              color: var(--amber);
+              font-family: var(--font-h);
+              letter-spacing: -0.3px;
+            "
+            >"No more wait, just order straight."</span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <script>
+      /* ── CURSOR ─────────────────── */
+      const dot = document.getElementById("cur-dot"),
+        ring = document.getElementById("cur-ring");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        dot.style.left = mx + "px";
+        dot.style.top = my + "px";
+      });
+      (function anim() {
+        rx += (mx - rx) * 0.1;
+        ry += (my - ry) * 0.1;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(anim);
+      })();
+      document.querySelectorAll("button,a,[onclick]").forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          document.body.classList.add("cursor-hover"),
+        );
+        el.addEventListener("mouseleave", () =>
+          document.body.classList.remove("cursor-hover"),
+        );
+      });
+
+      /* ── NAVBAR SCROLL ───────────── */
+      window.addEventListener("scroll", () =>
+        document
+          .getElementById("navbar")
+          .classList.toggle("stuck", scrollY > 50),
+      );
+
+      /* ── REVEAL ON SCROLL ────────── */
+      const ro = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("in");
+          }),
+        { threshold: 0.12 },
+      );
+      function initReveal() {
+        document.querySelectorAll(".rv,.rv-l").forEach((el) => ro.observe(el));
+      }
+      document.addEventListener("page-changed", () =>
+        setTimeout(initReveal, 80),
+      );
+      window.addEventListener("load", () => setTimeout(initReveal, 300));
+
+      /* ── MOBILE NAV ──────────────── */
+      function toggleMob() {
+        const n = document.getElementById("mob-nav"),
+          h = document.getElementById("hamburger");
+        n.classList.toggle("open");
+        h.classList.toggle("open");
+      }
+      function closeMob() {
+        document.getElementById("mob-nav").classList.remove("open");
+        document.getElementById("hamburger").classList.remove("open");
+      }
+
+      /* ── AUTH TABS ───────────────── */
+      function switchTab(t) {
+        document
+          .querySelectorAll(".auth-tab")
+          .forEach((el, i) =>
+            el.classList.toggle("active", ["login", "register"][i] === t),
+          );
+        document
+          .querySelectorAll(".auth-form")
+          .forEach((f) => f.classList.remove("active"));
+        document.getElementById("form-" + t).classList.add("active");
+      }
+
+      /* ── SEARCH HELPER ───────────── */
+      function searchMenu(q) {
+        q = q.toLowerCase().trim();
+        if (!q) {
+          filterAndRenderMenu(activeCategory);
+          return;
+        }
+        renderMenuGrid(
+          allMenuItems.filter(
+            (i) =>
+              i.name.toLowerCase().includes(q) ||
+              (i.description || "").toLowerCase().includes(q),
+          ),
+        );
+      }
+    </script>
+  </body>
+</html>
